@@ -34,11 +34,8 @@ except Exception:
 setup(
     name='mask-rcnn-tf2',
     version='1.0',
-    url='https://github.com/ahmedfgad/Mask-RCNN-TF2',
-    author='Ahmed Fawzy Gad',
-    author_email='ahmed.f.gad@gmail.com',
     license='MIT',
-    description='Object Detecting using Mask R-CNN in TensorFlow 2.0',
+    description='Object Detecting using Mask R-CNN in TensorFlow 2.14',
     packages=["mrcnn"],
     install_requires=install_reqs,
     include_package_data=True,
