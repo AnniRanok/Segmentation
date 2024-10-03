@@ -393,23 +393,21 @@ augmentation = iaa.Sequential([
 # We load the weights of the model
 model.load_weights("/content/drive/MyDrive/model_weights.h5")
 
-#callbacks = [
-#    ModelCheckpoint(filepath='/content/drive/MyDrive/my_model.h5', save_best_only=True), #keeps the best model weights according to the validation loss criterion.
- #   EarlyStopping(patience=5), #stops training if validation loss does not improve within 5 epochs.
- #   ReduceLROnPlateau(factor=0.1, patience=2), #reduces learning rate by 0.1 if validation loss does not improve within 2 epochs.
-  #  TensorBoard(log_dir='./logs') #keeps logs for training monitoring.
-#]
+callbacks = [
+    ModelCheckpoint(filepath='/content/drive/MyDrive/my_model.h5', save_best_only=True), #keeps the best model weights according to the validation loss criterion.
+    EarlyStopping(patience=5), #stops training if validation loss does not improve within 5 epochs.
+    ReduceLROnPlateau(factor=0.1, patience=2), #reduces learning rate by 0.1 if validation loss does not improve within 2 epochs.
+    TensorBoard(log_dir='./logs') #keeps logs for training monitoring.
+]
 
 # Training the model with a callback
 get_ipython().run_line_magic('%time', '')
-
 model.train(train_dataset, valid_dataset,
             learning_rate=1e-4, # Smaller learning rate for fine tuning
             epochs=10,
             layers='all',
-            augmentation=augmentation
-            #callbacks=callbacks
-           )
+            augmentation=augmentation,
+            callbacks=callbacks)
 #The model is trained on all layers (layers='all') for 10 epochs using augmentations and callbacks.
 
 # Combining stories

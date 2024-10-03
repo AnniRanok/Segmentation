@@ -40,7 +40,7 @@ setup(
     install_requires=install_reqs,
     include_package_data=True,
     python_requires='>=3.4',
-    long_description="""This is a modified version of this project (https://github.com/matterport/Mask_RCNN) so that the Mask R-CNN model works on TensorFlow 2.0. """,
+    long_description="""This is a modified version of this project (https://github.com/matterport/Mask_RCNN) so that the Mask R-CNN model works on TensorFlow 2.14. """,
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
@@ -59,5 +59,5 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.7',
     ],
-    keywords="image instance region segmentation object detection Mask-RCNN Mask RCNN R-CNN TensorFlow 2.0 Keras",
+    keywords="image instance region segmentation object detection Mask-RCNN Mask RCNN R-CNN TensorFlow 2.14 Keras",
 )
