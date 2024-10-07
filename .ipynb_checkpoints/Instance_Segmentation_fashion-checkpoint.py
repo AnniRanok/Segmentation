@@ -45,7 +45,9 @@ from sklearn.model_selection import StratifiedKFold, KFold, train_test_split
 
 # In[ ]:
 
-#Copy the  directory mrcnn inside the root directory
+
+os.chdir('/content/maskrcnn')
+
 
 # In[4]:
 
@@ -73,7 +75,7 @@ IMAGE_SIZE = 512
 # In[ ]:
 
 
-sys.path.append(str(ROOT_DIR/'main'))
+sys.path.append(str(ROOT_DIR/'maskrcnn'))
 from mrcnn.config import Config
 from mrcnn import utils
 from mrcnn import visualize
@@ -414,6 +416,15 @@ model.train(train_dataset, valid_dataset,
 new_history = model.keras_model.history.history
 for k in new_history:
     history[k] = history[k] + new_history[k]
+
+
+# In[ ]:
+
+
+#Choosing the best epoch
+#best_epoch = np.argmin(history["val_loss"]) + 1
+#print("Best epoch: ", best_epoch)
+#print("Valid loss: ", history["val_loss"][best_epoch-1])
 
 
 # # **Predict**
