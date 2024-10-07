@@ -1,0 +1,337 @@
+[
+    {
+        "id": 0,
+        "name": "T-Shirt",
+        "translation": "Футболка"
+    },
+    {
+        "id": 1,
+        "name": "Long-Sleeve T-Shirt",
+        "translation": "Футболка з довгим рукавом"
+    },
+    {
+        "id": 2,
+        "name": "Tank Top",
+        "translation": "Майка"
+    },
+    {
+        "id": 3,
+        "name": "Crop Top",
+        "translation": "Укорочений топ"
+    },
+    {
+        "id": 4,
+        "name": "Off-Shoulder Top",
+        "translation": "Топ з відкритими плечима"
+    },
+    {
+        "id": 5,
+        "name": "Halter Top",
+        "translation": "Топ на зав'язках навколо шиї"
+    },
+    {
+        "id": 6,
+        "name": "Blouse",
+        "translation": "Блузка"
+    },
+    {
+        "id": 7,
+        "name": "Shirt",
+        "translation": "Сорочка"
+    },
+    {
+        "id": 8,
+        "name": "Sweater",
+        "translation": "Светр"
+    },
+    {
+        "id": 9,
+        "name": "Cardigan",
+        "translation": "Кардиган"
+    },
+    {
+        "id": 10,
+        "name": "Vest",
+        "translation": "Жилет"
+    },
+    {
+        "id": 11,
+        "name": "Puffer Vest",
+        "translation": "Пуховий жилет"
+    },
+    {
+        "id": 12,
+        "name": "Denim Vest",
+        "translation": "Джинсовий жилет"
+    },
+    {
+        "id": 13,
+        "name": "Hoodie",
+        "translation": "Худі"
+    },
+    {
+        "id": 14,
+        "name": "Sweatshirt",
+        "translation": "Толстовка (кофта)"
+    },
+    {
+        "id": 15,
+        "name": "Tunic",
+        "translation": "Туніка"
+    },
+    {
+        "id": 16,
+        "name": "Kimono",
+        "translation": "Кімоно"
+    },
+    {
+        "id": 17,
+        "name": "Polo",
+        "translation": "Поло"
+    },
+    {
+        "id": 18,
+        "name": "Jersey",
+        "translation": "Джерсі"
+    },
+    {
+        "id": 19,
+        "name": "Denim Jacket",
+        "translation": "Джинсова куртка"
+    },
+    {
+        "id": 20,
+        "name": "Leather Jacket",
+        "translation": "Шкіряна куртка"
+    },
+    {
+        "id": 21,
+        "name": "Bomber Jacket",
+        "translation": "Бомбер"
+    },
+    {
+        "id": 22,
+        "name": "Puffer Jacket",
+        "translation": "Пуховик"
+    },
+    {
+        "id": 23,
+        "name": "Quilted Jacket",
+        "translation": "Стьобана куртка"
+    },
+    {
+        "id": 24,
+        "name": "Windbreaker",
+        "translation": "Вітровка"
+    },
+    {
+        "id": 25,
+        "name": "Varsity Jacket",
+        "translation": "Університетська куртка"
+    },
+    {
+        "id": 26,
+        "name": "Blouson Jacket",
+        "translation": "Блузон"
+    },
+    {
+        "id": 27,
+        "name": "Short Blazer",
+        "translation": "Короткий піджак"
+    },
+    {
+        "id": 28,
+        "name": "Long Blazer",
+        "translation": "Довгий піджак"
+    },
+    {
+        "id": 29,
+        "name": "Fitted Blazer",
+        "translation": "Приталений піджак"
+    },
+    {
+        "id": 30,
+        "name": "Oversized Blazer",
+        "translation": "Піджак оверсайз"
+    },
+    {
+        "id": 31,
+        "name": "Coat",
+        "translation": "Пальто"
+    },
+    {
+        "id": 32,
+        "name": "Trench Coat",
+        "translation": "Тренч"
+    },
+    {
+        "id": 33,
+        "name": "Peacoat",
+        "translation": "Коротке пальто"
+    },
+    {
+        "id": 34,
+        "name": "Overcoat",
+        "translation": "Довге пальто"
+    },
+    {
+        "id": 35,
+        "name": "Duffle Coat",
+        "translation": "Дафлкот (дубльонка)"
+    },
+    {
+        "id": 36,
+        "name": "Parka",
+        "translation": "Парка"
+    },
+    {
+        "id": 37,
+        "name": "Wool Coat",
+        "translation": "Вовняне пальто"
+    },
+    {
+        "id": 38,
+        "name": "Down Coat",
+        "translation": "Пухове пальто"
+    },
+    {
+        "id": 39,
+        "name": "Raincoat",
+        "translation": "Дощовик"
+    },
+    {
+        "id": 40,
+        "name": "Cape",
+        "translation": "Пелерина"
+    },
+    {
+        "id": 41,
+        "name": "Gilet",
+        "translation": "Безрукавка"
+    },
+    {
+        "id": 42,
+        "name": "Pants",
+        "translation": "Штани"
+    },
+    {
+        "id": 43,
+        "name": "Leggings",
+        "translation": "Легінси"
+    },
+    {
+        "id": 44,
+        "name": "Jeans",
+        "translation": "Джинси"
+    },
+    {
+        "id": 45,
+        "name": "Shorts",
+        "translation": "Шорти"
+    },
+    {
+        "id": 46,
+        "name": "Mini Skirt",
+        "translation": "Міні-спідниця"
+    },
+    {
+        "id": 47,
+        "name": "Midi Skirt",
+        "translation": "Міді-спідниця"
+    },
+    {
+        "id": 48,
+        "name": "Maxi Skirt",
+        "translation": "Максі-спідниця"
+    },
+    {
+        "id": 49,
+        "name": "Mini Dress",
+        "translation": "Міні-сукня"
+    },
+    {
+        "id": 50,
+        "name": "Midi Dress",
+        "translation": "Міді-сукня"
+    },
+    {
+        "id": 51,
+        "name": "Maxi Dress",
+        "translation": "Максі-сукня"
+    },
+    {
+        "id": 52,
+        "name": "Jumpsuit",
+        "translation": "Комбінезон"
+    },
+    {
+        "id": 53,
+        "name": "Gown",
+        "translation": "Сукня вечірня"
+    },
+    {
+        "id": 54,
+        "name": "Sandals",
+        "translation": "Сандалі"
+    },
+    {
+        "id": 55,
+        "name": "Flip Flops",
+        "translation": "Шльопанці"
+    },
+    {
+        "id": 56,
+        "name": "Espadrilles",
+        "translation": "Еспадрільї"
+    },
+    {
+        "id": 57,
+        "name": "Sneakers",
+        "translation": "Кросівки"
+    },
+    {
+        "id": 58,
+        "name": "Boots",
+        "translation": "Чоботи"
+    },
+    {
+        "id": 59,
+        "name": "Loafers",
+        "translation": "Лофери"
+    },
+    {
+        "id": 60,
+        "name": "Oxfords",
+        "translation": "Оксфорди"
+    },
+    {
+        "id": 61,
+        "name": "Ballet Flats",
+        "translation": "Балетки"
+    },
+    {
+        "id": 62,
+        "name": "Mules",
+        "translation": "Мюлі"
+    },
+    {
+        "id": 63,
+        "name": "Heels",
+        "translation": "Туфлі на підборах"
+    },
+    {
+        "id": 64,
+        "name": "Bag",
+        "translation": "Сумка"
+    },
+    {
+        "id": 65,
+        "name": "Backpack",
+        "translation": "Рюкзак"
+    },
+    {
+        "id": 66,
+        "name": "Necklace",
+        "translation": "Намисто"
+    }
+]
