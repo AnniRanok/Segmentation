@@ -45,7 +45,9 @@ from sklearn.model_selection import StratifiedKFold, KFold, train_test_split
 
 # In[ ]:
 
-#Copy the  directory mrcnn inside the root directory
+
+os.chdir('/content/maskrcnn')
+
 
 # In[4]:
 
@@ -73,7 +75,7 @@ IMAGE_SIZE = 512
 # In[ ]:
 
 
-sys.path.append(str(ROOT_DIR/'main'))
+sys.path.append(str(ROOT_DIR/'maskrcnn'))
 from mrcnn.config import Config
 from mrcnn import utils
 from mrcnn import visualize
@@ -393,29 +395,46 @@ augmentation = iaa.Sequential([
 # We load the weights of the model
 model.load_weights("/content/drive/MyDrive/model_weights.h5")
 
-#callbacks = [
-#    ModelCheckpoint(filepath='/content/drive/MyDrive/my_model.h5', save_best_only=True), #keeps the best model weights according to the validation loss criterion.
- #   EarlyStopping(patience=5), #stops training if validation loss does not improve within 5 epochs.
- #   ReduceLROnPlateau(factor=0.1, patience=2), #reduces learning rate by 0.1 if validation loss does not improve within 2 epochs.
-  #  TensorBoard(log_dir='./logs') #keeps logs for training monitoring.
-#]
 
-# Training the model with a callback
+# Training the model 
 get_ipython().run_line_magic('%time', '')
-
 model.train(train_dataset, valid_dataset,
-            learning_rate=1e-4, # Smaller learning rate for fine tuning
-            epochs=10,
+            learning_rate=1e-3, # Smaller learning rate for fine tuning
+            epochs=6,
             layers='all',
-            augmentation=augmentation
-            #callbacks=callbacks
-           )
-#The model is trained on all layers (layers='all') for 10 epochs using augmentations and callbacks.
+            augmentation=augmentation)
+
+#The model is trained on all layers (layers='all') for 6 epochs using augmentations.
 
 # Combining stories
 new_history = model.keras_model.history.history
 for k in new_history:
     history[k] = history[k] + new_history[k]
+
+# In[ ]:
+
+# Training the model 
+get_ipython().run_line_magic('%time', '')
+model.train(train_dataset, valid_dataset,
+            learning_rate=1e-4, # Smaller learning rate for fine tuning
+            epochs=8,
+            layers='all',
+            augmentation=augmentation)
+
+#The model is trained on all layers (layers='all') for 10 epochs using augmentations.
+
+# Combining stories
+new_history = model.keras_model.history.history
+for k in new_history:
+    history[k] = history[k] + new_history[k]
+
+# In[ ]:
+
+
+#Choosing the best epoch
+best_epoch = np.argmin(history["val_loss"]) + 1
+model.load_weights(f'best_model_epoch_{best_epoch}.h5')
+
 
 
 # # **Predict**
@@ -429,7 +448,7 @@ class InferenceConfig(FashionConfig):
     IMAGES_PER_GPU = 1
 inference_config = InferenceConfig()
 
-glob_list = glob.glob(f'/content/drive/MyDrive/my_model.h5')
+glob_list = glob.glob(f'/content/drive/MyDrive/best_model_epoch_{best_epoch}.h5')
 model_path = glob_list[0] if glob_list else ''
 
 #Creating a model for inference
@@ -437,7 +456,7 @@ model = modellib.MaskRCNN(mode='inference',#'inference' mode for predictions
                           config=inference_config,
                           model_dir=ROOT_DIR)
 
-assert model_path != '/drive/My Drive/my_model.h5'
+assert model_path != '/drive/My Drive/best_model_epoch_{best_epoch}.h5'
 model.load_weights(model_path, by_name=True)
 
 
