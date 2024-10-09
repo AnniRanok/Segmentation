@@ -8,6 +8,8 @@ To copy images, I used a tool that simulates a person manually downloading image
 
 The images were annotated using the VGG Image Annotator (VIA) tool. This tool allows for the annotation of objects in images, where each object is assigned a mask that describes its shape and location in the image. Each object, such as an item of clothing or an accessory, is manually outlined and labeled with the appropriate class.
 
+![Annotation](main/IMG_6902.jpg)
+
 **Saving Annotation Results:**
 
 After completing the annotation, the data from VIA is exported in JSON/CSV format. Each object in the image has mask coordinates (in RLE format or a list of pixels), the object's class, and the image dimensions.  
@@ -43,53 +45,22 @@ Augmentation can help make training more robust to variations in the data. We lo
 
 Each epoch in the training process exhibits variations in loss values. Given that Mask-RCNN incorporates an Region Proposal Network (RPN) which predicts region proposals along with class labels, bounding boxes, and mask predictions, we observe five distinct types of losses to be minimized. For a detailed breakdown of these losses, please refer to the model.py script.
 
-rpn_class_loss = RPN anchor classification loss
-rpn_bbox_loss = RPN bounding box regression loss
-mrcnn_class_loss = Mask R-CNN classifier head loss
-mrcnn_bbox_loss = Mask R-CNN bounding box refinement loss
-mrcnn_mask_loss = Mask binary cross-entropy loss for mask head  
+* rpn_class_loss = RPN anchor classification loss
+* rpn_bbox_loss = RPN bounding box regression loss
+* mrcnn_class_loss = Mask R-CNN classifier head loss
+* mrcnn_bbox_loss = Mask R-CNN bounding box refinement loss
+* mrcnn_mask_loss = Mask binary cross-entropy loss for mask head  
 
 To generate predictions, we load the model weights corresponding to the epoch with the lowest validation loss from the saved checkpoints in the logs directory. The predicted results are then visualized. The first element of the results array (r=r[0]) is a dictionary containing the following key-value pairs:  
 
-**rois:** A list of bounding boxes representing the regions of interest for detected objects.
-**masks:** A set of masks, each corresponding to a detected object, indicating the precise pixel-level segmentation.
-**class_ids:** Integer identifiers for the predicted class of each object.
-**scores:** Confidence scores associated with each predicted class, indicating the model's certainty about the classification.  
+* **rois:** A list of bounding boxes representing the regions of interest for detected objects.
+* **masks:** A set of masks, each corresponding to a detected object, indicating the precise pixel-level segmentation.
+* **class_ids:** Integer identifiers for the predicted class of each object.
+* **scores:** Confidence scores associated with each predicted class, indicating the model's certainty about the classification.  
 
 ****____________________________________________________________________________________________________________****
 
-This method should be implemented specifically where the TODO placeholder is located. The generated output should be stored within the response object to be subsequently sent to the frontend for rendering:  
 
-def extract_masks(boxes, masks, class_ids, class_names,
-                      scores=None):
-    # Number of instances
-    N = boxes.shape[0]
-    assert boxes.shape[0] == masks.shape[-1] == class_ids.shape[0]
-    for i in range(N):
-        # Bounding box
-        if not np.any(boxes[i]):
-            # Skip this instance. Has no bbox. Likely lost in image cropping.
-            continue
-        y1, x1, y2, x2 = boxes[i]
-        # TODO save box coordinates
 
-        # Label
-        class_id = class_ids[i]
-        score = scores[i] if scores is not None else None
-        label = class_names[class_id]
-        # TODO save label and score
 
-        # Mask
-        mask = masks[:, :, i]
-
-        # Mask Polygon
-        # Pad to ensure proper polygons for masks that touch image edges.
-        padded_mask = np.zeros(
-            (mask.shape[0] + 2, mask.shape[1] + 2), dtype=np.uint8)
-        padded_mask[1:-1, 1:-1] = mask
-        contours = find_contours(padded_mask, 0.5)
-        for verts in contours:
-            # Subtract the padding and flip (y, x) to (x, y)
-            verts = np.fliplr(verts) - 1
-            # TODO save verts
 
