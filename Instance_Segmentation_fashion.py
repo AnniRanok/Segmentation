@@ -405,7 +405,7 @@ model.train(train_dataset, valid_dataset,
             layers='all',
             augmentation=augmentation
            )
-#The model is trained on all layers (layers='all') for 8 epochs using augmentations and callbacks.
+#The model is trained on all layers (layers='all') for 8 epochs using augmentations.
 
 # Combining stories
 new_history = model.keras_model.history.history
@@ -425,7 +425,7 @@ model.train(train_dataset, valid_dataset,
             layers='all',
             augmentation=augmentation
            )
-#The model is trained on all layers (layers='all') for 12 epochs using augmentations and callbacks.
+#The model is trained on all layers (layers='all') for 12 epochs using augmentations.
 
 # Combining stories
 new_history = model.keras_model.history.history
