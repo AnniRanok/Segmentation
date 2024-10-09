@@ -8,7 +8,7 @@ To copy images, I used a tool that simulates a person manually downloading image
 
 The images were annotated using the VGG Image Annotator (VIA) tool. This tool allows for the annotation of objects in images, where each object is assigned a mask that describes its shape and location in the image. Each object, such as an item of clothing or an accessory, is manually outlined and labeled with the appropriate class.
 
-![Annotation](main/IMG_6902.jpg)
+![Annotation](https://github.com/AnniRanok/Segmentation/blob/main/IMG_6902.jpg)
 
 **Saving Annotation Results:**
 
