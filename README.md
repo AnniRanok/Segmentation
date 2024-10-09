@@ -2,7 +2,9 @@
 
 
 **Step 1: Collect web images from Google Images**
-To copy images, I used a tool that simulates a person manually downloading images from Google (Scraping.py) . Selenium is an open-source web automation tool that can perform tasks by connecting Python to a web browser. Additionally, I needed to download a web driver for the corresponding version of Google Chrome (version 129).
+To copy images, I used a tool that simulates a person manually downloading images from Google (**Scraping.py**) . Selenium is an open-source web automation tool that can perform tasks by connecting Python to a web browser. Additionally, I needed to download a web driver for the corresponding version of Google Chrome (version 129).
+
+![Scraping](https://github.com/AnniRanok/Segmentation/blob/main/1.jpg)
 
 **Step 2:Image Annotation**
 
@@ -14,17 +16,17 @@ The images were annotated using the VGG Image Annotator (VIA) tool. This tool al
 
 After completing the annotation, the data from VIA is exported in JSON/CSV format. Each object in the image has mask coordinates (in RLE format or a list of pixels), the object's class, and the image dimensions.  
 
-Mask_Creating.ipynb
+**Mask_Creating.ipynb**
 
 **Preparation of the image_df file:**
 
 After obtaining the annotation results, all data is converted into a table, which is stored as a DataFrame (using the Pandas library). The main columns of this DataFrame are:
 
-**ImageId:** A unique identifier for the image (without the file extension), used to link each object to the corresponding image.
-**Height:** The height of the image (in pixels), to know the size of the mask that corresponds to this image.
-**Width:** The width of the image (in pixels), similarly used for scaling the masks.
-**EncodedPixels:** The masks for each object, represented in Run-Length Encoding (RLE) format. This is a compressed format that encodes the number of background and object pixels.
-**ClassId:** The identifier of the object class, which represents the type of object (e.g., jacket, dress, socks, etc.).
+* **ImageId:** A unique identifier for the image (without the file extension), used to link each object to the corresponding image.  
+* **Height:** The height of the image (in pixels), to know the size of the mask that corresponds to this image.  
+* **Width:** The width of the image (in pixels), similarly used for scaling the masks.  
+* **EncodedPixels:** The masks for each object, represented in Run-Length Encoding (RLE) format. This is a compressed format that encodes the number of background and object pixels.  
+* **ClassId:** The identifier of the object class, which represents the type of object (e.g., jacket, dress, socks, etc.).  
 
 **Step 3:Configure the project**
 
