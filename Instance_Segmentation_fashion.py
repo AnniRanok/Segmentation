@@ -361,7 +361,7 @@ This allows you to relearn the model for new classes."""
 get_ipython().run_line_magic('%time', '')
 model.train(train_dataset, valid_dataset,
             learning_rate=2e-3,
-            epochs=3,
+            epochs=10,
             layers='heads',
             augmentation=None)
 
@@ -401,11 +401,11 @@ get_ipython().run_line_magic('%time', '')
 
 model.train(train_dataset, valid_dataset,
             learning_rate=1e-3, # Smaller learning rate for fine tuning
-            epochs=8,
+            epochs= 20,
             layers='all',
             augmentation=augmentation
            )
-#The model is trained on all layers (layers='all') for 8 epochs using augmentations.
+#The model is trained on all layers (layers='all') for 20 epochs using augmentations.
 
 # Combining stories
 new_history = model.keras_model.history.history
@@ -421,11 +421,11 @@ get_ipython().run_line_magic('%time', '')
 
 model.train(train_dataset, valid_dataset,
             learning_rate=1e-4, # Smaller learning rate for fine tuning
-            epochs=12,
+            epochs=30,
             layers='all',
             augmentation=augmentation
            )
-#The model is trained on all layers (layers='all') for 12 epochs using augmentations.
+#The model is trained on all layers (layers='all') for 30 epochs using augmentations.
 
 # Combining stories
 new_history = model.keras_model.history.history
@@ -441,11 +441,11 @@ get_ipython().run_line_magic('%time', '')
 
 model.train(train_dataset, valid_dataset,
             learning_rate=1e-5, # Smaller learning rate for fine tuning
-            epochs=16,
+            epochs=50,
             layers='all',
             augmentation=augmentation
            )
-#The model is trained on all layers (layers='all') for 16 epochs using augmentations and callbacks.
+#The model is trained on all layers (layers='all') for 50 epochs using augmentations and callbacks.
 
 # Combining stories
 new_history = model.keras_model.history.history
