@@ -144,6 +144,37 @@ mrcnn.visualize.display_instances(image=image,
 
 
 
+"""
+If it occurs need to pass only mask outlines to the frontend and not the masks themselves, then masks can easily be converted to outlines using image processing techniques. One approach is to use an OpenCV library that allows you to extract contours from binary masks.
+ """
+
+from google.colab.patches import cv2_imshow
+"""
+Binary mask 8-bit. The mask returned by Mask R-CNN represents objects as pixels with two values ​​- 0 and 1 (0 for the background and 1 for the object). We convert these values ​​to 8-bit format, where 0 corresponds to black and 255 to white (the object).
+"""
+
+binary_mask_8bit = (binary_mask * 255).astype(np.uint8)
+
+""" 
+We find the contours of the mask. The findContours function identifies the boundaries between the object and the background, returning a list of points describing these boundaries (contours).
+"""
+
+contours, hierarchy = cv2.findContours(binary_mask_8bit, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+"""
+RETR_EXTERNAL: This option means that we only want to find the outer contours of objects. Other options can also find internal contours.
+CHAIN_APPROX_SIMPLE: This option simplifies the contours by keeping only the key points that describe the shape of the object.
+"""
+
+# Convert a mask to an image for rendering contours
+contour_image = cv2.cvtColor(binary_mask, cv2.COLOR_GRAY2BGR)
+
+# We draw contours on the image
+cv2.drawContours(contour_image, contours, -1, (0, 255, 0), 2)
+# We display images with contours
+cv2_imshow(contour_image)
+
+
+
 
 
 """# **Additional functions:**
