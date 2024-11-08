@@ -33,26 +33,28 @@ class FashionDataset(Dataset):
         self.width = width
         self.image_info = collections.defaultdict(dict)
 
+        self.image_df = self.image_df.drop_duplicates('ImageId', keep='last').reset_index(drop=True)
+                
+        counter = 0
         for index, row in tqdm(image_df.iterrows(), total=len(image_df)):
             image_id = row['ImageId']
-            image_path = os.path.join(self.image_dir, f"{image_id}.jpg")
+            image_path = os.path.join(self.image_dir, image_id)
 
-            if not os.path.isfile(image_path):
-                print(f"Warning: {image_path} does not exist.")
-                continue
+            if os.path.exists(image_path + '.jpg'):
+                self.image_info[counter]["image_id"] = image_id
+                self.image_info[counter]["image_path"] = image_path
+                self.image_info[counter]["height"] = self.height
+                self.image_info[counter]["labels"] = row["ClassId"]
+                self.image_info[counter]["orig_height"] = row["Height"]
+                self.image_info[counter]["orig_width"] = row["Width"]
+                self.image_info[counter]["annotations"] = row[" EncodedPixels"].strip()
+                counter += 1            
 
-            self.image_info[index]["image_id"] = image_id
-            self.image_info[index]["image_path"] = image_path
-            self.image_info[index]["width"] = self.width
-            self.image_info[index]["height"] = self.height
-            self.image_info[index]["labels"] = row["ClassId"]
-            self.image_info[index]["orig_height"] = row["Height"]
-            self.image_info[index]["orig_width"] = row["Width"]
-            self.image_info[index]["annotations"] = row["EncodedPixels"]
+
 
     def __getitem__(self, idx):
         img_path = self.image_info[idx]["image_path"]
-        img = Image.open(img_path).convert("RGB")
+        img = Image.open(img_path + '.jpg').convert("RGB")
         img = img.resize((self.width, self.height), resample=Image.BILINEAR)
 
         info = self.image_info[idx]

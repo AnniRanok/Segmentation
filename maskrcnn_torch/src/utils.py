@@ -3,13 +3,12 @@ import errno
 import os
 import time
 from collections import defaultdict, deque
-
 import torch
 import torch.distributed as dist
 import os
 from src.config import Config
 
-def save_checkpoint(model, optimizer, epoch, loss, filename="checkpoint"):
+def save_checkpoint(model, optimizer, epoch, loss, filename="checkpoint.pth"):
     """Stores model, optimizer, epoch, and loss state with a unique file name."""
     checkpoint = {
         "model_state_dict": model.state_dict(),
@@ -17,7 +16,7 @@ def save_checkpoint(model, optimizer, epoch, loss, filename="checkpoint"):
         "epoch": epoch,
         "loss": loss
     }
-    filepath = os.path.join(Config.MODEL_SAVE_DIR, f"{filename}_epoch_{epoch}.pth")
+    filepath = os.path.join(Config.MODEL_SAVE_DIR, filename)
     torch.save(checkpoint, filepath)
     print(f"Checkpoint saved at '{filepath}'")
 
@@ -32,7 +31,7 @@ def load_checkpoint(filepath, model, optimizer=None):
 
 
 def find_best_checkpoint(model, optimizer=None, directory=Config.MODEL_SAVE_DIR):
-    """Finds the path to the best control point with the least amount of loss."""
+    """Finds the path to the best checkpoint with the least amount of loss."""
     best_loss = float('inf')
     best_checkpoint_path = None
 
@@ -47,31 +46,14 @@ def find_best_checkpoint(model, optimizer=None, directory=Config.MODEL_SAVE_DIR)
     print(f"Best checkpoint is '{best_checkpoint_path}' with loss {best_loss}")
     return best_checkpoint_path
 
-def save_checkpoint(model, optimizer, epoch, loss, filename="checkpoint.pth"):
-    checkpoint = {
-        "model_state_dict": model.state_dict(),
-        "optimizer_state_dict": optimizer.state_dict(),
-        "epoch": epoch,
-        "loss": loss
-    }
-    torch.save(checkpoint, os.path.join(Config.MODEL_SAVE_DIR, filename))
-
-
-def load_checkpoint(filepath, model, optimizer=None):
-    checkpoint = torch.load(filepath)
-    model.load_state_dict(checkpoint['model_state_dict'])
-    if optimizer:
-        optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-    return checkpoint['epoch']
 
 def load_best_weights(model, directory=Config.MODEL_SAVE_DIR):
-    """Loads the best model weights from the control point with the least loss."""
+    """Loads the best model weights from the checkpoint with the least loss."""
     best_checkpoint_path = find_best_checkpoint(model, directory=directory)
     if best_checkpoint_path:
         checkpoint = torch.load(best_checkpoint_path)
         model.load_state_dict(checkpoint["model_state_dict"])
         print(f"Best model weights loaded from '{best_checkpoint_path}'")
-
 
 class SmoothedValue:
     """Track a series of values and provide access to smoothed values over a

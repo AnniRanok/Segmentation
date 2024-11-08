@@ -14,6 +14,7 @@ class Config:
     MODEL_SAVE_DIR = 'models/'
     TRAIN_DATA_CSV = 'train_data.csv'
     VALID_DATA_CSV = 'valid_data.csv'
+    CHECKPOINT_PATH = 'checkpoint_path'
     
     FOLD = 0
     N_FOLDS = 5

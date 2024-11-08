@@ -1,13 +1,13 @@
 import torch
 from torch.utils.tensorboard import SummaryWriter
 from src.config import Config
-from src.datasets import initialize_data_loaders
+from src.data import get_dataloaders
 from src.model import get_instance_segmentation_model
-from src.engine import train_one_epoch, evaluate
+from src.train import train_one_epoch
 from src.validate import validate
 from src.utils import save_checkpoint
 import pandas as pd
-
+from engine import train_one_epoch, evaluate
 
 def main():
     
@@ -39,8 +39,6 @@ def main():
         
         metric_logger = train_one_epoch(model, optimizer, train_loader, device, epoch, print_freq=10)
 
-        scheduler.step()
-
         coco_evaluator = evaluate(model, valid_loader, device)
 
         writer.add_scalar('Loss/train', metric_logger.meters['loss'].global_avg, epoch)
@@ -52,6 +50,7 @@ def main():
             save_checkpoint(model, optimizer, epoch, best_loss, checkpoint_path=Config.CHECKPOINT_PATH)
             print(f"Model saved at epoch {epoch + 1} with best validation loss {best_loss:.4f}")
         
+        scheduler.step()
 
     writer.close()
 
