@@ -71,12 +71,13 @@ def _get_iou_types(model):
     return iou_types
 
 
+
 @torch.inference_mode()
 def evaluate(model, data_loader, device):
-    n_threads = torch.get_num_threads()
+    #n_threads = torch.get_num_threads()
     # FIXME remove this and make paste_masks_in_image run on the GPU
-    torch.set_num_threads(1)
-    cpu_device = torch.device("cpu")
+    #torch.set_num_threads(1)
+    #cpu_device = torch.device("cpu")
     model.eval()
     metric_logger = utils.MetricLogger(delimiter="  ")
     header = "Test:"
@@ -93,8 +94,8 @@ def evaluate(model, data_loader, device):
         model_time = time.time()
         outputs = model(images)
 
-        outputs = [{k: v.to(cpu_device) for k, v in t.items()} for t in outputs]
-        model_time = time.time() - model_time
+        #outputs = [{k: v.to(cpu_device) for k, v in t.items()} for t in outputs]
+        #model_time = time.time() - model_time
 
         res = {target["image_id"]: output for target, output in zip(targets, outputs)}
         evaluator_time = time.time()
