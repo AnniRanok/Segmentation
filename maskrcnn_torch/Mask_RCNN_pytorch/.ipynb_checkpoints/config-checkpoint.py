@@ -7,7 +7,7 @@ IMG_WIDTH = 256
 IMG_HEIGHT = 256
 NUM_CLASSES = 46
 BATCH_SIZE = 16
-N_WORKERS = 6
+N_WORKERS = 1
 NUM_EPOCHS = 30
 DEVICE = DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 FOLD = 0  

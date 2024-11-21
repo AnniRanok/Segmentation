@@ -11,7 +11,6 @@ import torchvision
 from sklearn.model_selection import KFold
 from config import FOLD, N_FOLDS, image_dir, root_path_train, image_extension, IMG_HEIGHT, IMG_WIDTH
 
-
 class FashionDataset(torch.utils.data.Dataset):
     def __init__(self, image_dir, df, height, width, transforms=None):
         self.transforms = transforms
@@ -21,7 +20,8 @@ class FashionDataset(torch.utils.data.Dataset):
         self.width = width
         self.image_info = collections.defaultdict(dict)
 
-        self.df.loc[:, 'CategoryId'] = self.df.ClassId.apply(lambda x: str(x).split("_")[0])
+        # Column processing and aggregation
+        self.df['CategoryId'] = self.df.ClassId.apply(lambda x: str(x).split("_")[0])
         temp_df = self.df.groupby('ImageId')[['EncodedPixels', 'CategoryId']].agg(lambda x: list(x)).reset_index()
         size_df = self.df.groupby('ImageId')[['Height', 'Width']].mean().reset_index()
         temp_df = temp_df.merge(size_df, on='ImageId', how='left')
@@ -31,9 +31,10 @@ class FashionDataset(torch.utils.data.Dataset):
             image_id = row['ImageId']
             image_path = os.path.join(self.image_dir, f"{image_id}.jpg")
             if not os.path.isfile(image_path):
-                logging.info(f"Warning: {image_path} does not exist.")
+                print(f"Warning: {image_path} does not exist.")
                 continue
 
+            # We store metadata about images
             self.image_info[index] = {
                 "image_id": image_id,
                 "image_path": image_path,
@@ -45,8 +46,10 @@ class FashionDataset(torch.utils.data.Dataset):
                 "annotations": row["EncodedPixels"]
             }
 
+        self.img2tensor = torchvision.transforms.ToTensor()
+
     def rle_decode(self, rle, shape):
-        """Decoding the mask in RLE format."""
+        """Decodes a mask encoded in RLE format."""
         img = np.zeros(shape[0] * shape[1], dtype=np.uint8)
         s = list(map(int, rle.split()))
         starts = s[0::2]
@@ -56,70 +59,73 @@ class FashionDataset(torch.utils.data.Dataset):
         return img.reshape(shape).T
 
     def __getitem__(self, idx):
+        # Download image and annotations
         info = self.image_info[idx]
         img_path = info["image_path"]
         img = Image.open(img_path).convert("RGB")
         img = img.resize((self.width, self.height), resample=Image.BILINEAR)
 
-        # Creating masks
-        mask = np.zeros((len(info['annotations']), self.height, self.width), dtype=np.uint8)
-        for m, annotation in enumerate(info['annotations']):
-            orig_height, orig_width = int(float(info['orig_height'])), int(float(info['orig_width']))
+        mask = np.zeros((len(info['annotations']), self.width, self.height), dtype=np.uint8)
+        labels = []
+
+        # We decode masks and prepare labels
+        for m, (annotation, label) in enumerate(zip(info['annotations'], info['labels'])):
+            if isinstance(label, str):  # If label is a string, we convert it into a list
+                label = [label]
+
+            try:
+                orig_height = int(float(info['orig_height']))
+                orig_width = int(float(info['orig_width']))
+            except ValueError:
+                orig_height, orig_width = self.height, self.width
+
             sub_mask = self.rle_decode(annotation, (orig_height, orig_width))
-            sub_mask = Image.fromarray(sub_mask).resize((self.width, self.height), resample=Image.NEAREST)
+            sub_mask = Image.fromarray(sub_mask)
+            #sub_mask = sub_mask.resize((self.width, self.height), resample=Image.BILINEAR)
+            sub_mask = sub_mask.resize((self.width, self.height), resample=Image.NEAREST)
+
+
             mask[m] = np.array(sub_mask)
 
-        masks_list = [mask[i, :, :] for i in range(mask.shape[0])]
+            # If label is a list, we add each element
+            if isinstance(label, list):  # If label is a list
+                for lbl in label:
+                    labels.append(int(lbl) + 1)  
+            else:
+                labels.append(int(label) + 1)  
 
-        # Application of augmentations
-        if self.transforms:
-            augmented = self.transforms(image=np.array(img), masks=masks_list)
-            img = augmented["image"]
-            masks_list = augmented["masks"]
-
-        # Generation of bounding boxes, labels, area, iscrowd, masks
         boxes = []
-        labels = []
-        area = []
-        iscrowd = []
-        masks = []  
+        new_labels = []
+        new_masks = []
 
-        for i, mask_2d in enumerate(masks_list):
-            pos = np.where(mask_2d > 0)
-            if len(pos[0]) == 0:
+        # We create bounding frames and new masks
+        for i in range(len(labels)):
+            pos = np.where(mask[i, :, :])
+            if pos[0].size == 0:  # If the mask is empty, skip it
                 continue
             xmin, ymin = np.min(pos[1]), np.min(pos[0])
             xmax, ymax = np.max(pos[1]), np.max(pos[0])
-
-            # Adding valid bounding boxes
-            if abs(xmax - xmin) > 20 and abs(ymax - ymin) > 20:
+            if abs(xmax - xmin) >= 20 and abs(ymax - ymin) >= 20:  # Ignore frames that are too small
                 boxes.append([xmin, ymin, xmax, ymax])
-                labels.append(int(info["labels"][i]))
-                area.append((xmax - xmin) * (ymax - ymin))
-                masks.append(mask_2d)
-                iscrowd.append(0)
+                new_labels.append(labels[i])
+                new_masks.append(mask[i])
 
-        # In the absence of valid boxes
-        if len(labels) == 0:
+        if len(new_labels) == 0:
             boxes.append([0, 0, 20, 20])
-            labels.append(0)
-            masks.append(mask[0, :, :])
-            area.append(400)
-            iscrowd.append(0)
+            new_labels.append(0)
+            new_masks.append(mask[0])
 
-        # Target preparation
-        image_id = torch.tensor([idx])
-        masks_stack = np.stack(masks, axis=0)
-        target_masks = torch.as_tensor(masks_stack, dtype=torch.uint8)
-
+        nmx = np.stack(new_masks, axis=0)
         target = {
             "boxes": torch.as_tensor(boxes, dtype=torch.float32),
-            "labels": torch.as_tensor(labels, dtype=torch.int64),
-            "masks": target_masks,
-            "image_id": image_id,
-            "area": torch.as_tensor(area, dtype=torch.float32),
-            "iscrowd": torch.as_tensor(iscrowd, dtype=torch.int64)
+            "labels": torch.as_tensor(new_labels, dtype=torch.int64),
+            "masks": torch.as_tensor(nmx, dtype=torch.uint8)
         }
+
+        img = self.img2tensor(img)
+
+        if self.transforms:
+            img, target = self.transforms(img, target)
 
         return img, target
 
@@ -162,7 +168,6 @@ move_images(valid_df, image_dir, valid_dir, extension=image_extension)
 train_df.to_csv("train_data.csv", index=False)
 valid_df.to_csv("valid_data.csv", index=False)
 
-
 # Custom collate function
 def custom_collate(batch):
     images = []
@@ -173,41 +178,34 @@ def custom_collate(batch):
 
     return images, labels
 
-
-
-train_transforms = albu.Compose([
+train_augmentations = albu.Compose([
     albu.HorizontalFlip(p=0.5),
+    albu.RandomBrightnessContrast(p=0.2),
     albu.ShiftScaleRotate(shift_limit=0.1, scale_limit=0.1, rotate_limit=15, p=0.5),
-    albu.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
-    ToTensorV2()
+    albu.GaussianBlur(p=0.1),
 ])
 
-val_transforms = albu.Compose([
-    albu.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
-    ToTensorV2()
-])
-
-
+#train_augmentations = get_train_augmentations()
 
 # Create dataset and dataloaders
 datset_train = FashionDataset(image_dir=train_dir,
                               df=train_df,
                               height=IMG_HEIGHT,
                               width=IMG_WIDTH,
-                              augmentations=train_transforms
+                              #augmentations=train_augmentations
                              )
 
 datset_val = FashionDataset(image_dir=valid_dir,
                             df=valid_df,
                             height=IMG_HEIGHT,
                             width=IMG_WIDTH,
-                            augmentations=val_transforms
+                            #augmentations=train_augmentations
                            )
 
 data_loader_train = torch.utils.data.DataLoader(
-    datset_train, batch_size=16, shuffle=True, num_workers=6,
+    datset_train, batch_size=16, shuffle=True, num_workers=1,
     collate_fn=custom_collate)
 
 data_loader_val = torch.utils.data.DataLoader(
-    datset_val, batch_size=16, shuffle=True, num_workers=6,
+    datset_val, batch_size=16, shuffle=True, num_workers=1,
     collate_fn=custom_collate)
