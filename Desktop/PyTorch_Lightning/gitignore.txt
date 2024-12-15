@@ -1,0 +1,11 @@
+.DS_Store
+/runs/
+/test/
+/train*/
+/image_df*.csv
+/train_data*.csv
+/valid_data*.csv
+/train*.csv
+/Makefile
+/checkpoints
+.*
